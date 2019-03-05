@@ -5,6 +5,7 @@ import com.roadTransport.RTOtpService.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class OtpController {
 
     @Autowired
-    OtpService otpService;
+    private OtpService otpService;
 
     @GetMapping("/getOtp/{mdn}")
-    public OtpDetails getOtp(@Param("mdn") long userMobileNumber){
+    public OtpDetails getOtp(@PathVariable("mdn") long userMobileNumber){
 
         OtpDetails otpDetails = otpService.generateOtp(userMobileNumber);
 
@@ -24,7 +25,7 @@ public class OtpController {
     }
 
     @GetMapping("/verifyOtp/{otp}/{mdn}")
-    public boolean verify(@Param("otp") long otp, @Param("mdn") long userMobileNumber) throws Exception {
+    public boolean verify(@PathVariable("otp") long otp, @PathVariable("mdn") long userMobileNumber) throws Exception {
 
         boolean verify = otpService.verifyOtp(otp, userMobileNumber);
         return verify;

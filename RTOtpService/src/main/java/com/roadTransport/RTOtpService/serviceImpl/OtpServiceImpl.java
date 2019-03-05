@@ -6,38 +6,27 @@ import com.roadTransport.RTOtpService.service.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Random;
+import java.util.TimeZone;
 
 @Service
 public class OtpServiceImpl implements OtpService {
 
     @Autowired
-    OtpDetailsRepository otpDetailsRepository;
+    private OtpDetailsRepository otpDetailsRepository;
 
     @Override
     public OtpDetails generateOtp(long userMobileNumber) {
 
         OtpDetails otpDetails = new OtpDetails();
         Calendar now = Calendar.getInstance();
-        Random random = new Random(999999);
+        Random random = new Random();
 
-        long otp = random.nextInt();
+        long otp = 100000+ random.nextInt(900000);
         otpDetails.setOtpNumber(otp);
-        otpDetails.setOtpStartTime(Long.parseLong(now.get(Calendar.HOUR_OF_DAY)
-                + ":"
-                + now.get(Calendar.MINUTE)
-                + ":"
-                + now.get(Calendar.SECOND)));
-
-        now.add(Calendar.MINUTE,3);
-
-        otpDetails.setOtpEndTime(Long.parseLong(now.get(Calendar.HOUR_OF_DAY)
-                + ":"
-                + now.get(Calendar.MINUTE)
-                + ":"
-                + now.get(Calendar.SECOND)));
-
+        otpDetails.setOtpStartTime(now.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis());
         otpDetails.setUserMobileNumber(userMobileNumber);
 
         otpDetailsRepository.saveAndFlush(otpDetails);
@@ -51,17 +40,24 @@ public class OtpServiceImpl implements OtpService {
         OtpDetails otpDetails = otpDetailsRepository.findByOtp(otp, userMobileNumber);
 
         if(otpDetails==null){
-            throw new Exception("Otp Is not match.");
+            throw new Exception("Otp is not Valid.");
+        }
+
+        if(otp != otpDetails.getOtpNumber()){
+
+            throw new Exception("Otp is not Valid.");
+
         }
         else{
 
-            long time =  otpDetails.getOtpEndTime()-otpDetails.getOtpStartTime();
+            long currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis();
+            long diff = currentTime - otpDetails.getOtpStartTime();
 
-            if(time <=3){
-                return true;
+            if(diff >=120000 || diff<=0){
+                return false;
             }
             else {
-                return false;
+                return true;
             }
         }
     }
