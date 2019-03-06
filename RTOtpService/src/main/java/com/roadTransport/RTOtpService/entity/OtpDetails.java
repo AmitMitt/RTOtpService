@@ -18,9 +18,6 @@ public class OtpDetails {
     private long otpStartTime;
 
     @Column
-    private long otpEndTime;
-
-    @Column
     private long userMobileNumber;
 
     public long getUserMobileNumber() {
@@ -55,21 +52,12 @@ public class OtpDetails {
         this.otpStartTime = otpStartTime;
     }
 
-    public long getOtpEndTime() {
-        return otpEndTime;
-    }
-
-    public void setOtpEndTime(long otpEndTime) {
-        this.otpEndTime = otpEndTime;
-    }
-
     @Override
     public String toString() {
         return "OtpDetails{" +
                 "Id=" + Id +
                 ", otpNumber=" + otpNumber +
                 ", otpStartTime=" + otpStartTime +
-                ", otpEndTime=" + otpEndTime +
                 ", userMobileNumber=" + userMobileNumber +
                 '}';
     }
