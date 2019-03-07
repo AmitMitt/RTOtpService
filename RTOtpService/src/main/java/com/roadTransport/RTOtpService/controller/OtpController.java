@@ -16,7 +16,7 @@ public class OtpController {
     @Autowired
     private OtpService otpService;
 
-    @Cacheable(value = "otp", key = "#mdn", unless = "#result.shares < 500")
+    @Cacheable(value = "otp", key = "#mdn")
     @GetMapping("/getOtp/{mdn}")
     public OtpDetails getOtp(@PathVariable("mdn") long userMobileNumber){
 
@@ -25,7 +25,7 @@ public class OtpController {
         return otpDetails;
     }
 
-    @Cacheable(value = "otp", key = "#mdn", unless = "#result.shares < 500")
+    @Cacheable(value = "otp", key = "#mdn")
     @GetMapping("/verifyOtp/{otp}/{mdn}")
     public boolean verify(@PathVariable("otp") long otp, @PathVariable("mdn") long userMobileNumber) throws Exception {
 
