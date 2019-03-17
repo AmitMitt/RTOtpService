@@ -53,7 +53,7 @@ public class OtpServiceImpl implements OtpService {
             long currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTimeInMillis();
             long diff = currentTime - otpDetails.getOtpStartTime();
 
-            if(diff >=120000 || diff<=0){
+            if(diff >=300000 || diff<=0){
                 return false;
             }
             else {
